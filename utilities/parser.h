@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <stdio.h>
+#include "logger.h"
 #include <jsoncpp/json/json.h>
 
 class Exception
@@ -21,13 +22,12 @@ class Parameters
 {
 public:
     Parameters(int argc, char** argv);
-    void ParseParameters(void);
-    void ParseMethod(void);
-    void CheckSanity(void);
+    void parseParameters(void);
+    void parseMethod(void);
+    void checkSanity(void);
     void toJSON(void);
+    Json::Value getJson(void);
 
-    //test method(for debugging purposes)
-    void get_params(void);
 
 
 private:

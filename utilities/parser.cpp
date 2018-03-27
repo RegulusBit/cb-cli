@@ -27,7 +27,7 @@ void Parameters::toJSON()
 
 }
 
-void Parameters::ParseParameters() {
+void Parameters::parseParameters() {
 
     parameters.clear();
 
@@ -53,11 +53,10 @@ void Parameters::ParseParameters() {
 
 }
 
-void Parameters::ParseMethod()
+void Parameters::parseMethod()
 {
     char argc_temp = argc;
     char** argv_temp = argv;
-
         // Skip switches
         while(argc_temp > 1 && IsSwitchChar(argv_temp[1][0]))
         {
@@ -68,46 +67,39 @@ void Parameters::ParseMethod()
         Method = "";
         // Method
         if (argc_temp < 2) {
-            help();
-            throw Exception("\n too few Parameters!\n");
+            checkSanity();
+            throw Exception("Too few Parameters!\n");
         }else
             Method = argv_temp[1];
 
 }
 
-
-void Parameters::get_params()
-{
-
-        int i=0;
-        for(auto kv : parameters)
-        {
-            i++;
-            std::cout << "the " << i  << "th parameter is: " << kv.first << ":" << kv.second[0] << std::endl;
-        }
-
-
-}
-
 void Parameters::help()
 {
-    std::string strUsage=std::string("this is a experimental user interface to work with confidential-bank client.");
+    std::string strUsage=std::string("This is a experimental user interface to work with confidential-bank client.");
 
     strUsage += std::string("\n\n") + "Usage:" + "\n" +
                "  bnb-cli [options] <command> [params]  " + "Send command to BONAB" + "\n" +
                "  bnb-cli [options] help                " + "List commands" + "\n" +
-               "  bnb-cli [options] help <command>      " + "Get help for a command" + "\n";
+               "  bnb-cli [options] help <command>      " + "Get help for a command" + "\n" + "\n" +
+               "List of command:" + "\n"  ;
 
-    fprintf(stdout, "%s", strUsage.c_str());
+    logger::log(strUsage);
 }
 
-void Parameters::CheckSanity()
+void Parameters::checkSanity()
 {
     if(argc<2 || parameters.count("-?") || parameters.count("-h") || parameters.count("-help") || parameters.count("-version"))
     {
         help();
         exit(EXIT_SUCCESS);
     }
+
+}
+
+Json::Value Parameters::getJson()
+{
+    return ParametersJSON;
 }
 
 Exception::Exception(std::string desc)
