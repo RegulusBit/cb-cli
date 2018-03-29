@@ -31,6 +31,6 @@ target_link_libraries(bnb_cli utilities libzmqm ${ZeroMQ_LIBRARY} ${JSONCPP_LIBR
 
 #  dependencies:
 #  sudo apt-get install libjsoncpp-dev (cpp JSON Parser)
-#
+#  sudo apt-get install libzmq3-dev
 #
 #

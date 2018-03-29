@@ -13,6 +13,8 @@ bool Parameters::IsSwitchChar(char c)
 
 void Parameters::toJSON()
 {
+    ParametersJSON["Method"] = Method;
+    Json::Value temp;
     for(auto kv : parameters)
     {
         Json::Value array;
@@ -20,8 +22,9 @@ void Parameters::toJSON()
             {
                 array.append(kv.second[i]);
             }
-        ParametersJSON[kv.first] = array;
+        temp[kv.first] = array;
     }
+    ParametersJSON["Parameters"]= temp;
     Json::StyledWriter styledWriter;
     std::cout << styledWriter.write(ParametersJSON);
 
@@ -82,7 +85,8 @@ void Parameters::help()
                "  bnb-cli [options] <command> [params]  " + "Send command to BONAB" + "\n" +
                "  bnb-cli [options] help                " + "List commands" + "\n" +
                "  bnb-cli [options] help <command>      " + "Get help for a command" + "\n" + "\n" +
-               "List of command:" + "\n"  ;
+               "List of command:" + "\n" +
+               "  bnb-cli <createAccount> [Description]" + "\n";
 
     logger::log(strUsage);
 }

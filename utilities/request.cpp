@@ -4,6 +4,7 @@
 
 #include "request.h"
 #include "zhelpers.hpp"
+#include "zmsg.hpp"
 #include "logger.h"
 #include <iostream>
 
@@ -19,19 +20,22 @@ zmq::context_t& Connection::get_context()
 
 Postman::Postman()
 {
+    srandom((unsigned)time(NULL));
     client = NULL;
 }
 
 void Postman::s_client_socket(zmq::context_t & context) {
     if(client)
         delete client;
-    logger::log( "connecting to server…" );
+    logger::log( "connecting to daemon…" );
     client = new zmq::socket_t (context, ZMQ_REQ);
     client->connect ("tcp://localhost:9155");
 
     //  Configure socket to not wait at close time
     int linger = 0;
     client->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+
+    s_set_id(*client);
 }
 
 
@@ -46,7 +50,11 @@ Json::Value Postman::post(Json::Value rqst)
     Json::StyledWriter stwr;
 
     requestMessage = fstw.write(rqst);
-    s_send(*client, requestMessage);
+
+    zmsg msg(requestMessage.c_str());
+    zmsg zreply;
+    //s_send(*client, requestMessage);
+    msg.send(*client);
 
     bool expect_reply = true;
         while(expect_reply)
@@ -57,7 +65,11 @@ Json::Value Postman::post(Json::Value rqst)
             if(items[0].revents && ZMQ_POLLIN)
             {
                 //process the response
-                replyMessage = s_recv(*client);
+                //replyMessage = s_recv(*client);
+
+                zreply.recv(*client);
+                replyMessage = zreply.body();
+
                 rdr.parse(replyMessage, reply);
                 std::cout << stwr.write(reply) << std::endl;
 
@@ -65,15 +77,15 @@ Json::Value Postman::post(Json::Value rqst)
             }
             else{
                 if (--retries_left == 0) {
-                    logger::log("server seems to be offline, abandoning");
+                    logger::log("daemon seems to be offline, abandoning");
                     expect_reply = false;
                     break;
                 } else {
-                    logger::log("no response from server, retrying…");
+                    logger::log("no response from daemon, retrying…");
                     //  Old socket will be confused; close it and open a new one
                     s_client_socket(Connection::get_context());
                     //  Send request again, on new socket
-                    s_send(*client, requestMessage);
+                    msg.send(*client);
                 }
             }
         }
