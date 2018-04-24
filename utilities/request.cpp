@@ -71,7 +71,7 @@ Json::Value Postman::post(Json::Value rqst)
                 replyMessage = zreply.body();
 
                 rdr.parse(replyMessage, reply);
-                std::cout << stwr.write(reply) << std::endl;
+                logger::log(stwr.write(reply));
 
                 expect_reply = false;
             }
@@ -89,5 +89,6 @@ Json::Value Postman::post(Json::Value rqst)
                 }
             }
         }
-
+    // never left behind the return part in functions that needs to return something :D
+    return reply;
 }
