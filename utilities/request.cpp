@@ -71,6 +71,22 @@ Json::Value Postman::post(Json::Value rqst)
                 replyMessage = zreply.body();
 
                 rdr.parse(replyMessage, reply);
+                std::cout << std::endl << std::endl;
+                for(auto k : reply.getMemberNames())
+                {
+
+                    if(k == "response") {
+                        logger::log(">>> RESPONSE: ");
+                        for(const Json::Value& z : reply[k])
+                        {
+                            logger::log(stwr.write(z));
+                        }
+                        continue;
+                    }
+                    logger::log(">>> " + k + ": " + reply[k].asString());
+
+                }
+                std::cout << std::endl;
                 logger::log(stwr.write(reply));
 
                 expect_reply = false;

@@ -1,0 +1,12 @@
+.get_accounts
+.register_account 0f672f9553db3876853527e43be31297b9f8550916ec9e19b2e3fdf791a0e340 100
+.get_registered_accounts
+.add_account
+.get_accounts
+.register_account b3c1e515405be8752cc8f73ac98a115fb13b00c9d9d867ea85bb0abc0bc5b8f9 200
+.get_registered_accounts
+.clear
+.get_registered_accounts
+.transaction 0f672f9553db3876853527e43be31297b9f8550916ec9e19b2e3fdf791a0e340 b3c1e515405be8752cc8f73ac98a115fb13b00c9d9d867ea85bb0abc0bc5b8f9 50
+.get_registered_accounts
+.exit

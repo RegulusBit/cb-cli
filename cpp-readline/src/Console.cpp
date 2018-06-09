@@ -130,11 +130,11 @@ namespace CppReadline {
         if ( inputs.size() == 0 ) return ReturnCode::Ok;
 
         Impl::RegisteredCommands::iterator it;
-        if ( ( it = pimpl_->commands_.find(inputs[1]) ) != end(pimpl_->commands_) ) {
+        if ( ( it = pimpl_->commands_.find(inputs[2]) ) != end(pimpl_->commands_) ) {
             return static_cast<int>((it->second)(inputs));
         }
 
-        std::cout << "Command '" << inputs[1] << "' not found.\n";
+        std::cout << "Command '" << inputs[2] << "' not found.\n";
         return ReturnCode::Error;
     }
 
@@ -177,7 +177,7 @@ namespace CppReadline {
 
         return executeCommand(line);
     }
-    int Console::readLine(char const* buffer, std::string request_counter) {
+    int Console::readLine(char const* buffer, std::string request_counter, std::string wallet_name) {
         reserveConsole();
 
         if ( !buffer ) {
@@ -192,6 +192,9 @@ namespace CppReadline {
         std::string line(buffer);
         line.insert(0, " ");
         line.insert(0, request_counter);
+        line.insert(0, " ");
+        line.insert(0, wallet_name);
+        std::cout << line << std::endl;
         return executeCommand(line);
     }
 

@@ -109,7 +109,7 @@ namespace CppReadline {
              * @return The result of the operation.
              */
             int readLine();
-            int readLine(char const* cinput, std::string request_counter);
+            int readLine(char const* cinput, std::string request_counter, std::string wallet_name);
         private:
             Console(const Console&) = delete;
             Console(Console&&) = delete;
